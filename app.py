@@ -25,4 +25,3 @@ print("Predicted:")
 print(prediction)
 
 print(neural_network.score(X_test, y_test))
-
