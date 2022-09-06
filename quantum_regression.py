@@ -30,7 +30,7 @@ def callback_graph(weights, obj_func_eval):
     plt.xlabel("Iteration")
     plt.ylabel("Objective function value")
     plt.plot(range(len(objective_func_vals)), objective_func_vals)
-    plt.show()
+    #plt.show()
 
 '''
 Begin Quantum Regression
@@ -44,9 +44,14 @@ f = lambda x: np.sin(x)
 X = (ub - lb) * algorithm_globals.random.random([num_samples, 1]) + lb
 y = f(X[:, 0]) + eps * (2 * algorithm_globals.random.random(num_samples) - 1)
 
-plt.plot(X_, f(X_), "r--")
-plt.plot(X, y, "bo")
-plt.show()
+print(f'X: ({len(X)})')
+print(X)
+print(f'y: ({len(y)})')
+print(y)
+
+#plt.plot(X_, f(X_), "r--")
+#plt.plot(X, y, "bo")
+#plt.show()
 
 # Here we restrict to regression with an OpflowQNN that returns values in . 
 # More complex and also multi-dimensional models could be constructed, also based on CircuitQNN but that exceeds the scope of this tutorial.
@@ -94,7 +99,7 @@ plt.plot(X, y, "bo")
 # plot fitted line
 y_ = regressor.predict(X_)
 plt.plot(X_, y_, "g-")
-plt.show()
+#plt.show()
 
 # Similar to the VQC for classification, the VQR is a special variant of the NeuralNetworkRegressor with a OpflowQNN. 
 # By default it considers the L2Loss function to minimize the mean squared error between predictions and targets.
@@ -129,5 +134,5 @@ plt.plot(X, y, "bo")
 # plot fitted line
 y_ = vqr.predict(X_)
 plt.plot(X_, y_, "g-")
-plt.show()
+#plt.show()
 
