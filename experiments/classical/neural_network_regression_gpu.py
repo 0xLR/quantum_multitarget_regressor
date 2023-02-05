@@ -3,6 +3,20 @@ import numpy as np
 from sklearn.datasets import make_regression
 from sklearn.model_selection import train_test_split
 
+
+"""
+Use the RAPIDS cuML library.
+Essentially a GPU version of Scikit-Learn (similar API)
+https://developer.nvidia.com/rapids
+May need to use Anaconda. See more here: https://rapids.ai/start.html
+
+
+or Skorch
+
+https://skorch.readthedocs.io/en/stable/
+
+"""
+
 X, y = make_regression(n_samples=1000, n_features=10, n_informative=5, n_targets=4, random_state=1)
 print(X.shape, y.shape)
 
