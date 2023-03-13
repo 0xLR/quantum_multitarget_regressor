@@ -1,4 +1,5 @@
 import numpy as np
+import os
 from sklearn.model_selection import train_test_split
 
 X_full_data_set = np.load('X_full_dataset.npy')
@@ -12,7 +13,10 @@ for split in training_splits:
     train_size = split/100 # float representation of training size
     test = 100-split # integer representation of test size to include in file_name
     X_train, X_test, y_train, y_test = train_test_split(X_full_data_set, y_full_data_set, random_state=1, train_size=train_size)
-    np.save(f'X_train_{split}-{test}', X_train, allow_pickle=True)
-    np.save(f'X_test_{split}-{test}', X_test, allow_pickle=True)
-    np.save(f'y_train_{split}-{test}', y_train, allow_pickle=True)
-    np.save(f'y_test_{split}-{test}', y_test, allow_pickle=True)
+
+    save_directory = f'{split}-{test}'
+    os.mkdir(save_directory)
+    np.save(os.path.join(save_directory, f'X_train_{split}-{test}'), X_train, allow_pickle=True)
+    np.save(os.path.join(save_directory, f'X_test_{split}-{test}'), X_test, allow_pickle=True)
+    np.save(os.path.join(save_directory, f'y_train_{split}-{test}'), y_train, allow_pickle=True)
+    np.save(os.path.join(save_directory, f'y_test_{split}-{test}'), y_test, allow_pickle=True)
