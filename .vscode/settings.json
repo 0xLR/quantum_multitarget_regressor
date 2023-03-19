@@ -1,0 +1,15 @@
+{
+    "git.ignoreLimitWarning": true,
+    "cSpell.words": [
+        "ansatz",
+        "BFGS",
+        "COBYLA",
+        "edgecolors",
+        "facecolors",
+        "linewidths",
+        "matplotlib",
+        "maxiter",
+        "pyplot",
+        "qiskit"
+    ]
+}
