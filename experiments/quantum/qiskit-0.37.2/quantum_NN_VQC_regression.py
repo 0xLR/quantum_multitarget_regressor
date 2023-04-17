@@ -23,9 +23,9 @@ train_size = int(0.7 * len(X))
 X_train, y_train = X[:train_size], y[:train_size]
 X_test, y_test = X[train_size:], y[train_size:]
 
-backend = Aer.get_backend('qasm_simulator')
+backend = Aer.get_backend('aer_simulator')
 vqc = VQC(optimizer=None, quantum_instance=backend, var_form=ansatz, feature_map=feature_map, ansatz_circuit=ansatz)
-vqc.fit(X_train, y_train, qnn)
+vqc.fit(X_train, y_train)
 
 
 y_pred = vqc.predict(X_test)
