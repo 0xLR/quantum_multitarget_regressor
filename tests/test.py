@@ -3,9 +3,6 @@ from sklearn.datasets import make_regression
 from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPRegressor
 
-def
-
-
 
 
 if __name__ == "__main__":
