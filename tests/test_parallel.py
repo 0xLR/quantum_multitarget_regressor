@@ -1,5 +1,7 @@
 
 import os, sys
+data_path = os.path.join(os.path.dirname(__file__), '..', 'src')
+sys.path.append(data_path)
 import csv
 from multitarget_qnn_regressor import MultiTargetQuantumNNRegressor
 from sklearn.datasets import make_regression
