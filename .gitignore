@@ -2,3 +2,4 @@ pyenv
 python_env
 quantum_env
 done.py
+__pycache__

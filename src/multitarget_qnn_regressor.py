@@ -29,7 +29,7 @@ class MultiTargetQuantumNNRegressor:
             self, 
             n_features: int, 
             n_targets: int, 
-            optimizer: Literal['cobyla', 'adam', 'lbfgsb','slsqp'] | None = None,
+            optimizer: Literal['cobyla', 'adam', 'lbfgsb','slsqp'],
             maxiter: int = 50,
             use_quantum_cloud = False,
             backend:str = None
@@ -186,7 +186,7 @@ class MultiTargetQuantumNNRegressor:
             self._neural_networks[i].fit(X, y[:,i])
 
     @staticmethod
-    def get_scaled_data(X: np.ndarray, y: np.ndarray | None):
+    def get_scaled_data(X: np.ndarray, y: np.ndarray):
         """
         Scales the dataset down to values between 0 and 1.
         Note: Model training convergence is better when the transformation is applied.
