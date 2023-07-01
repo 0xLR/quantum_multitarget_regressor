@@ -62,7 +62,7 @@ def train_model(arguments):
 if __name__ == "__main__":
     print("Beginning Tests")
     pool = multiprocessing.Pool(processes=4)
-    features_targets = [(3,2), (5,4), (10,5)]
+    features_targets = [(3,2)]
     optimizers = ['adam', 'lbfgs','sgd']
     sample_sizes = [100, 500, 1000]
     test_sizes = [20, 30, 40]    

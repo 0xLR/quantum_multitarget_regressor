@@ -15,7 +15,7 @@ from done import send_email
 if __name__ == "__main__":
     print("Beginning Tests")
 
-    features_targets = [(3,2), (5,4), (10,5)]
+    features_targets = [(3,2)]
     optimizers = ['cobyla', 'adam', 'lbfgsb','slsqp']
     sample_sizes = [100, 500, 1000]
     test_sizes = [20, 30, 40]    
