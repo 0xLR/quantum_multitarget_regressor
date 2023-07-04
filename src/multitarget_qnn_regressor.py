@@ -21,18 +21,20 @@ from typing import List, Literal
 
 class MultiTargetQuantumNNRegressor:
     r"""MultiTargetQuantumNNRegressor
-    
-    This class creates a multivariate multiple regression model by instantiating a separate quantum neural network for each target output. This class automatically constructs the
-    necessary quantum circuits for the feature map and an ansatz for the trainable weights to encode classical data into a quantum state.
+
+    This class creates a multivariate multiple regression model by instantiating a separate quantum
+    neural network for each target output. This class automatically constructs the necessary 
+    quantum circuits for the feature map and an ansatz for the trainable weights to encode 
+    classical data into a quantum state.
     """
     def __init__(
-            self, 
-            n_features: int, 
-            n_targets: int, 
-            optimizer: Literal['cobyla', 'adam', 'lbfgsb','slsqp'],
+            self,
+            n_features: int,
+            n_targets: int,
+            optimizer: Literal['cobyla', 'adam', 'lbfgsb', 'slsqp'],
             maxiter: int = 50,
-            use_quantum_cloud = False,
-            backend:str = None
+            use_quantum_cloud: bool = False,
+            backend: str = None
             ) -> None:
         r"""
         Parameters
@@ -73,7 +75,7 @@ class MultiTargetQuantumNNRegressor:
             self._optimizer = L_BFGS_B(maxiter=maxiter)
         else:
             raise Exception(f'The selected optimizer is invalid: {optimizer}')
-        self._neural_networks:List[NeuralNetworkRegressor] = []
+        self._neural_networks: List[NeuralNetworkRegressor] = []
         for _ in range(n_targets):
             feature_map = self._create_feature_map()
             ansatz = self._create_ansatz()
@@ -87,7 +89,7 @@ class MultiTargetQuantumNNRegressor:
         Creates a parameterized quantum circuit based on the number of features in the regression model.
         """
         feature_map = QuantumCircuit(self._n_features)
-        parameters=[]
+        parameters = []
         for i in range(self._n_features):
             parameter = Parameter(f"x{i}")
             parameters.append(parameter)
@@ -101,7 +103,7 @@ class MultiTargetQuantumNNRegressor:
         ansatz = RealAmplitudes(self._n_features, reps=self._n_features)
         return ansatz
     
-    def _create_quantum_circuit(self, feature_map:QuantumCircuit,ansatz:RealAmplitudes):
+    def _create_quantum_circuit(self, feature_map: QuantumCircuit, ansatz: RealAmplitudes):
         """
         Builds the quantum circuit that will be used to encode the classical data.
         """
@@ -123,7 +125,7 @@ class MultiTargetQuantumNNRegressor:
         else:
             return LocalEstimator()
 
-    def _create_estimator_qnn(self, qc:QuantumCircuit, feature_map:QuantumCircuit, ansatz:RealAmplitudes):
+    def _create_estimator_qnn(self, qc:QuantumCircuit, feature_map: QuantumCircuit, ansatz: RealAmplitudes):
         """
         Creates the Estimator Quantum Neural Network using the constructed quantum circuit and ansatz.
         """
@@ -136,7 +138,7 @@ class MultiTargetQuantumNNRegressor:
         )
         return qnn
     
-    def _create_neural_network_regressor(self, qnn:EstimatorQNN):
+    def _create_neural_network_regressor(self, qnn: EstimatorQNN):
         """
         Creates the trainable regression model using an underlying Estimator Quantum Neural Network.
         """
@@ -148,7 +150,7 @@ class MultiTargetQuantumNNRegressor:
         return regressor
 
     
-    def fit(self, X: np.ndarray, y: np.ndarray, scale_data:bool = False):
+    def fit(self, X: np.ndarray, y: np.ndarray, scale_data: bool = False):
         """
         Begins training the neural network corresponding to each output variable.
 
@@ -174,7 +176,7 @@ class MultiTargetQuantumNNRegressor:
             raise ValueError(f"Shapes don't match, X samples: {X.shape[0]}, y samples: {y.shape[0]}!")
         
         if scale_data:
-            X, y = self.get_scaled_data(X,y)
+            X, y = self.get_scaled_data(X, y)
 
         self._fit(X,y)
 
@@ -183,7 +185,7 @@ class MultiTargetQuantumNNRegressor:
         Internally called from self.fit() to begin training each model.
         """
         for i in range(self._n_targets):    
-            self._neural_networks[i].fit(X, y[:,i])
+            self._neural_networks[i].fit(X, y[:, i])
 
     @staticmethod
     def get_scaled_data(X: np.ndarray, y: np.ndarray):
@@ -200,12 +202,31 @@ class MultiTargetQuantumNNRegressor:
             The target values.
         """
         scaler = MinMaxScaler()
-        X = scaler.fit_transform(X)        
+        X = scaler.fit_transform(X)
         if y is not None:
             y = scaler.fit_transform(y)
         return X, y
 
-    def predict(self, X: np.ndarray, scale_data:bool = False):
+    @staticmethod
+    def get_unscaled_data(X: np.ndarray, y: np.ndarray):
+        """
+        Reverses the scaling of the X and y values to original values.
+
+        Parameters
+        ----------
+        X: numpy array of shape (n_samples, n_features)
+            The input data.
+
+        y: numpy array of shape (n_samples, n_targets)
+            The target values.
+        """
+        scaler = MinMaxScaler()
+        X = scaler.inverse_transform(X)
+        if y is not None:
+            y = scaler.inverse_transform(y)
+        return X, y
+
+    def predict(self, X: np.ndarray, scale_data: bool = False):
         """
         Predict the target values given the input vector.
         
@@ -220,7 +241,7 @@ class MultiTargetQuantumNNRegressor:
             The target values.
         """
         if scale_data:
-            X, _ = self.get_scaled_data(X,None)
+            X, _ = self.get_scaled_data(X, None)
         if X.shape[1] != self._n_features:
             raise ValueError(f"Shapes don't match, X features: {X.shape[1]}, n_features: {self._n_features}!")
         return self._predict(X)
@@ -233,10 +254,10 @@ class MultiTargetQuantumNNRegressor:
         for i in range(self._n_targets):
             prediction = self._neural_networks[i].predict(X)
             predictions.append(prediction)
-        final_result = np.reshape(np.stack((predictions), axis = 1), (X.shape[0],len(predictions)))
+        final_result = np.reshape(np.stack((predictions), axis= 1), (X.shape[0], len(predictions)))
         return final_result
 
-    def score(self, X: np.ndarray, y: np.ndarray, scale_data:bool = False):
+    def score(self, X: np.ndarray, y: np.ndarray, scale_data: bool = False):
         """
         Compute the coefficient of determination i.e. the R-squared (R2) score.
         
@@ -262,11 +283,10 @@ class MultiTargetQuantumNNRegressor:
         if X.shape[0] != y.shape[0]:
             raise ValueError(f"Shapes don't match, X samples: {X.shape[0]}, y samples: {y.shape[0]}!")
         if scale_data:
-            X, y = self.get_scaled_data(X,y)
+            X, y = self.get_scaled_data(X, y)
         
         return self._score(X, y)
-        
-    
+
     def _score(self, X: np.ndarray, y: np.ndarray):
         """
         Internally called from self.score().
@@ -336,7 +356,7 @@ class MultiTargetQuantumNNRegressor:
         """
         return mean_squared_error(y_true=y_true, y_pred=y_pred, squared=False)
 
-    def save_model(self, model_name = 'model'):
+    def save_model(self, model_name: str = 'model'):
         """
         Saves the model to disk.
 
@@ -349,7 +369,7 @@ class MultiTargetQuantumNNRegressor:
             pickle.dump(self, file)
 
     @staticmethod
-    def load_model(model_name = 'model'):
+    def load_model(model_name: str = 'model'):
         """
         Loads the saved model from disk.
 

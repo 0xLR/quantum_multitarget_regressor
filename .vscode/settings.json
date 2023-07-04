@@ -6,10 +6,22 @@
         "COBYLA",
         "edgecolors",
         "facecolors",
+        "ibmq",
+        "lbfgsb",
         "linewidths",
         "matplotlib",
         "maxiter",
+        "ndarray",
         "pyplot",
-        "qiskit"
-    ]
+        "qasm",
+        "qiskit",
+        "rmse",
+        "sklearn",
+        "slsqp",
+        "SLSQP"
+    ],
+    "python.linting.flake8Enabled": true,
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": false,
+    "python.linting.banditEnabled": false
 }
