@@ -11,8 +11,8 @@ from sklearn.preprocessing import MinMaxScaler
 import time
 import multiprocessing
 
-def train_model(arguments):
-    n_features, n_targets, n_samples, optimizer, iteration, test_size, X_train, X_test, Y_train, Y_test = arguments
+def train_model(n_features, n_targets, n_samples, optimizer, iteration, test_size, X_train, X_test, Y_train, Y_test):
+    # n_features, n_targets, n_samples, optimizer, iteration, test_size, X_train, X_test, Y_train, Y_test = arguments
 
     print(f"Started with {n_features, n_targets, n_samples, optimizer, iteration, test_size}")
     qnn = MLPRegressor(max_iter=iteration, solver=optimizer).fit(X_train, Y_train)
@@ -35,7 +35,7 @@ def train_model(arguments):
     mse = mean_squared_error(y_true=Y_test, y_pred=predictions, squared=True)
     rmse = mean_squared_error(y_true=Y_test, y_pred=predictions, squared=False)
     
-    filename = 'classical_results.csv'
+    filename = 'classical_results-2023-07-04.csv'
     file_exists = os.path.isfile(filename)
     with open (filename, 'a') as csvfile:
         headers = ['n_features', 'n_targets', 'n_samples', 'test_size', 'optimizer', 'iterations', 'training_time', 'prediction_time', 'r2', 'mae', 'mse', 'rmse']
@@ -85,9 +85,9 @@ if __name__ == "__main__":
                 
                 for optimizer in optimizers:
                     for iteration in iterations:
-                        processes.append((n_features, n_targets, n_samples, optimizer, iteration, test_size, X_train, X_test, Y_train, Y_test))
-    result = pool.map(train_model, processes)
-    results.append(result)
+                        train_model(n_features, n_targets, n_samples, optimizer, iteration, test_size, X_train, X_test, Y_train, Y_test)
+    #result = pool.map(train_model, processes)
+    #results.append(result)
     print('Done!')
 
                            
