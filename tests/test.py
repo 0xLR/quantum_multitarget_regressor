@@ -8,7 +8,6 @@ from sklearn.datasets import make_regression
 from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPRegressor
 import time
-from done import send_email
 
 
 
@@ -84,6 +83,3 @@ if __name__ == "__main__":
                                                                 'mse':mse,
                                                                   'rmse': rmse}
                             writer.writerow(final_result)
-
-                            if send:
-                                send_email(str(final_result))

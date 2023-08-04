@@ -1,5 +1,5 @@
 """
-@Date: 2023-06-25
+@Year: 2023
 @Note: Artifact of Doctoral Dissertation
 """
 
@@ -13,7 +13,7 @@ from qiskit.circuit.library import RealAmplitudes
 from qiskit_machine_learning.algorithms.regressors import NeuralNetworkRegressor
 from qiskit_machine_learning.neural_networks import EstimatorQNN
 from qiskit.primitives import Estimator as LocalEstimator
-from qiskit_ibm_runtime import QiskitRuntimeService, Estimator, Session
+from qiskit_ibm_runtime import QiskitRuntimeService, Estimator, Session, Options
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 from sklearn.preprocessing import MinMaxScaler
 from typing import List, Literal
@@ -119,8 +119,10 @@ class MultiTargetQuantumNNRegressor:
         if self._use_quantum_cloud:
             service = QiskitRuntimeService(channel="ibm_quantum")
             backend = service.backend(self._backend)
-            session = Session(service=service, backend=backend)
-            estimator = Estimator(session=session)
+            session = Session(service=service, backend=backend,max_time=18000)
+            options = Options(max_execution_time=18000)
+            options.execution.shots = 1024
+            estimator = Estimator(session=session, options=options)
             return estimator
         else:
             return LocalEstimator()
