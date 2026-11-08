@@ -1,8 +1,3 @@
-"""
-@Year: 2023
-@Note: Artifact of Doctoral Dissertation
-"""
-
 import numpy as np
 import pickle
 from qiskit import QuantumCircuit
